@@ -1,46 +1,71 @@
-import { AxiosError } from 'axios'
-import { ref } from 'vue'
-import type { Ref } from 'vue'
+import { AxiosError } from 'axios';
+import { ref } from 'vue';
+import type { Ref } from 'vue';
 
 export interface RequestError {
-  code: number | null
-  message: string
+  code: number | null;
+  message: string;
 }
 
-export const useRequest = <T>(request: () => Promise<T>, isClearDataOnNewRequest = false) => {
-  const response = ref(null) as Ref<T | null>
-  const isLoading = ref<boolean>(false)
-  const requestError = ref<RequestError | null>(null)
+export interface RequestPayload<DATA_RESPONSE, REQUEST_PARAMS extends unknown[]> {
+  requestCb: (...arg: REQUEST_PARAMS) => Promise<DATA_RESPONSE>;
+  onError?: (error: RequestError) => void;
+  isClearDataOnNewRequest?: boolean;
+  isClearDataOnError?: boolean;
+}
 
-  const load = async (): Promise<void> => {
+export const useRequest = <DATA_RESPONSE, REQUEST_PARAMS extends unknown[]>({
+  requestCb: request,
+  isClearDataOnNewRequest = false,
+  isClearDataOnError = true,
+  onError
+}: RequestPayload<DATA_RESPONSE, REQUEST_PARAMS>) => {
+  const data = ref(null) as Ref<DATA_RESPONSE | null>;
+  const isLoading = ref<boolean>(false);
+  const error = ref<RequestError | null>(null);
+
+  const run = async (...args: Parameters<typeof request>): Promise<void> => {
     try {
-      isLoading.value = true
-      requestError.value = null
+      isLoading.value = true;
+      error.value = null;
       if (isClearDataOnNewRequest) {
-        response.value = null
+        data.value = null;
       }
 
-      const currentResponse = await request()
+      const currentResponse = await request(...args);
 
       if (currentResponse !== undefined && currentResponse !== null) {
-        response.value = currentResponse
+        data.value = currentResponse;
       }
     } catch (e) {
-      if (e instanceof AxiosError) {
-        requestError.value = { code: e.response?.status ?? null, message: e.message }
-      } else {
-        requestError.value = { code: null, message: 'unknown error' }
+      if (isClearDataOnError) {
+        data.value = null;
       }
-      response.value = null
+
+      let currentError: RequestError | null = null;
+
+      if (e instanceof AxiosError) {
+        currentError = { code: e.response?.status ?? null, message: e.message };
+      } else if (e instanceof Error) {
+        currentError = { code: null, message: e.message };
+      } else {
+        currentError = { code: null, message: 'unknown error' };
+      }
+
+      if (onError !== undefined) {
+        onError(currentError);
+      } else {
+        error.value = currentError;
+      }
     } finally {
-      isLoading.value = false
+      isLoading.value = false;
     }
-  }
+  };
 
   return {
-    response,
+    data,
     isLoading,
-    requestError,
-    load
-  }
-}
+    error,
+    run
+  };
+};

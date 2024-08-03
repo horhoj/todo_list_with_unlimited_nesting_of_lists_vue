@@ -1,5 +1,7 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import OutlayListWidget from '@/features/treeList/components/OutlayListWidget.vue';
+</script>
 
 <template>
-  <div>main1</div>
+  <OutlayListWidget />
 </template>

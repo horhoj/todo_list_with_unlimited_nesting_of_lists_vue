@@ -10,5 +10,7 @@
 .main {
   display: flex;
   flex-grow: 1;
+  padding: 20px;
+  flex-direction: column;
 }
 </style>

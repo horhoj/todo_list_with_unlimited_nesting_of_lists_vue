@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-const props = defineProps<{ isShow: boolean }>()
+const props = defineProps<{ isShow: boolean }>();
 </script>
 
 <template>
