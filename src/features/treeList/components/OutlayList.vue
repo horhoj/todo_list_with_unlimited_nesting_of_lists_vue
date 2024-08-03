@@ -96,6 +96,7 @@ const makeEditFormValues = ({ body: { count, name, sum } }: RowTreeNodeView): Ro
             @on-submit="(values) => emit('onCreateSubmit', values, dataItem.parentId)"
             v-if="!dataItem.isEdit && dataItem.isNew"
             :key="dataItem.body.id"
+            @on-cancel="emit('onCancel')"
           />
           <OutlayListEditItem
             :disabled="props.disabled"
@@ -103,6 +104,7 @@ const makeEditFormValues = ({ body: { count, name, sum } }: RowTreeNodeView): Ro
             @on-submit="(values) => emit('onEditSubmit', values, dataItem.body.id)"
             v-if="dataItem.isEdit && !dataItem.isNew"
             :key="dataItem.body.id"
+            @on-cancel="emit('onCancel')"
           />
         </tr>
       </tbody>
