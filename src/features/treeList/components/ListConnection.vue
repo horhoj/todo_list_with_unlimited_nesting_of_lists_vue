@@ -55,19 +55,18 @@ const data = computed(() => props.listPosition.map((position) => ({ position, id
 
   left: 50%;
   top: -50%;
-  width: 1px;
+  width: 2px;
   height: 200%;
-  background-color: #c6c6c6;
+  background-color: #666;
 }
 
 .center-vertical-half-line {
   position: absolute;
-
   left: 50%;
   top: -50%;
-  width: 1px;
+  width: 2px;
   height: 100%;
-  background-color: #c6c6c6;
+  background-color: #666;
 }
 
 .center-horizontal-half-line {
@@ -75,8 +74,8 @@ const data = computed(() => props.listPosition.map((position) => ({ position, id
   left: 50%;
   top: 50%;
   width: 100%;
-  height: 1px;
-  background-color: #c6c6c6;
+  height: 2px;
+  background-color: #666;
 }
 
 .icon {
