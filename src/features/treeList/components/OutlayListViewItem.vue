@@ -7,7 +7,9 @@ const props = defineProps<{
 </script>
 
 <template>
-  <td class="td">{{ props.itemBody.name }}</td>
+  <td class="td">
+    <span class="span">{{ props.itemBody.name }}</span>
+  </td>
   <td class="td">{{ props.itemBody.count.toLocaleString() }}</td>
   <td class="td">{{ props.itemBody.sum.toLocaleString() }}</td>
 </template>
@@ -15,5 +17,12 @@ const props = defineProps<{
 <style lang="scss">
 .td {
   padding: 5px 12px;
+}
+.span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 400px;
+  display: block;
+  white-space: nowrap;
 }
 </style>
